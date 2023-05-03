@@ -5,9 +5,9 @@ from flask_cors import CORS, cross_origin
 
 import os
 
+
 from bson import json_util
 from bson.objectid import ObjectId
-
 
 app = Flask(__name__)
 
@@ -18,32 +18,20 @@ app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
 
 mongo = PyMongo(app)
 
-
 @app.route('/users/<id>', methods=['GET'])
 @cross_origin()
 def get_user(id):
-   
-    user = mongo.db.users.find_one({'_id': ObjectId(id)}) 
+
+    user = mongo.db.users.find_one({'_id': ObjectId(id)})
 
     response = json_util.dumps(user)
 
     return Response(response, mimetype="application/json")
 
 
-
-@app.route('/users/<id>', methods=['DELETE'])
-@cross_origin()
-def delete_user(id):
-
-    mongo.db.users.delete_one({'_id': ObjectId(id)})
-
-    response = jsonify({'message': 'User ' + id + ' was DEelted successfully'})
-
-    return response
-
-
 @app.route('/users', methods=['POST'])
 def create_user():
+
     username = request.json['username']
     password = request.json['password']
     email = request.json['email']
@@ -55,13 +43,6 @@ def create_user():
         id = mongo.db.users.insert_one(
             {"username":username, "email":email, "password":hashed_password}
         )
-
-        # response = {
-        #     'id' : str(id),
-        #     'userame': username,
-        #     'password': password,
-        #     'email': email
-        # }
 
     else:
         return not_found()
@@ -79,6 +60,7 @@ def get_users():
     response = json_util.dumps(users)
 
     return Response(response, mimetype='application/json')
+
 
 
 @app.errorhandler(404)
@@ -112,7 +94,49 @@ def update_users(id):
         return response
 
     except Exception as e:
+        print("Error: " + e)
         return ("Error: " + e)
+
+
+    
+@app.route('/usersPassword/<id>', methods=['PUT'])
+@cross_origin()
+def updatePassword(id):
+
+    try:
+
+        user = mongo.db.users.find_one({'_id': ObjectId(id)})
+
+        currentPassword = request.json['currentPassword']
+        newPassword = request.json['newPassword']
+
+        if check_password_hash(user['password'], currentPassword):
+
+            hashed_newPassword = generate_password_hash(newPassword)
+
+            mongo.db.users.update_one({'_id': ObjectId(id)}, {'$set': {
+                'password': hashed_newPassword
+            }})
+
+            response = jsonify({'message': 'Password from user id: ' + id + ' was updated successfully'})
+            return response
+        
+        return 
+
+    except Exception as e:
+        return ("Error: ", e)
+    
+
+@app.route('/users/<id>', methods=['DELETE'])
+@cross_origin()
+def delete_user(id):
+
+    mongo.db.users.delete_one({'_id': ObjectId(id)})
+
+    response = jsonify({'message': 'User ' + id + ' was DEelted successfully'})
+
+    return response
+
 
 if __name__ == "__main__":
     app.run(debug=True)
