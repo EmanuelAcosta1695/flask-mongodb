@@ -5,13 +5,15 @@ from flask_cors import CORS, cross_origin
 
 import os
 
-
 from bson import json_util
 from bson.objectid import ObjectId
 
+
 app = Flask(__name__)
 
+
 CORS(app, support_credentials=True, resources={r"/*": {"origins": "*"}})
+
 
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
 
@@ -94,7 +96,7 @@ def update_users(id):
         return response
 
     except Exception as e:
-        print("Error: " + e)
+
         return ("Error: " + e)
 
 
