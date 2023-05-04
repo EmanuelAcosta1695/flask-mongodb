@@ -4,4 +4,4 @@ Backend: API en Flask (CRUD) con DB en MongoDB.
 
 Frontend: HTML - CSS - Javascript.   
 
-Consumo la API con Javacript.   
+Se consume la API con Javacript.   
