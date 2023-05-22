@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
 
 import os
+import json
 
 from bson import json_util
 from bson.objectid import ObjectId
@@ -59,9 +60,25 @@ def get_users():
 
     users = mongo.db.users.find()
 
-    response = json_util.dumps(users)
+    response = json_util.dumps(users)   
 
-    return Response(response, mimetype='application/json')
+    # convertir la cadena JSON a una lista de diccionarios
+    users = json.loads(response)
+
+
+    base_url = os.environ.get('BASE_URL')
+
+    # Iterar sobre la lista de diccionarios
+    for user in users:
+        filename = user['profile']
+        user["profilePic"] = base_url+filename
+
+    # Convertir la lista actualizada de objetos en JSON
+    updated_response = json.dumps(users)
+ 
+
+    return Response(updated_response, mimetype='application/json')
+
 
 
 
