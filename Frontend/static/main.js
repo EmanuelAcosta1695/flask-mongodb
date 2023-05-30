@@ -34,11 +34,11 @@ function users() {
             data.forEach(user => {
                 html += `
                     <tr>
-                        <td><img src="${user.profilePic}" alt="Profile Picture" width="50" height="50"></td>
                         <td>${user._id["$oid"]}</td>
+                        <td><img src="${user.profilePic}" alt="Profile Picture" width="50" height="50"></td>
                         <td>${user.username}</td>
                         <td>${user.email}</td>
-                        <td><button class="btn" onclick="EliminarUser(this)"><i>Eliminar</i></button></td>
+                        <td><button class="btn" onclick="eliminarUser(this)"><i>Eliminar</i></button></td>
                         <td><button class="btn" onclick="recuperarIdUsuario('${encodeURIComponent(JSON.stringify(user._id))}')"><i>Editar</i></button></td>
                     </tr>
                 `;  
@@ -303,16 +303,13 @@ function cargarDatosUsuario() {
 // ------------------------------------------------------------------------------------------
 
 
-
-
-
-
-async function EliminarUser(btn) {
+async function eliminarUser(btn) {
 
     let fila = btn.parentNode.parentNode;
+    console.log(fila)
 
-
-    let id = JSON.parse(fila.firstElementChild.innerHTML).$oid;
+    let id = fila.firstElementChild.textContent;
+    console.log(id);
 
     let url = 'http://127.0.0.1:5000/users/';
 

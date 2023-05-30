@@ -1,7 +1,16 @@
-from flask import Flask, request, jsonify, Response, send_file
+from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
+
+
+# from flask_swagger import swagger
+
+# from flask_swagger_ui import get_swaggerui_blueprint
+
+# from flasgger import Swagger
+
 
 import os
 import json
@@ -9,17 +18,19 @@ import json
 from bson import json_util
 from bson.objectid import ObjectId
 
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'img')
+
+
 
 app = Flask(__name__)
 
-
 CORS(app, support_credentials=True, resources={r"/*": {"origins": "*"}})
 
-
+#app.config['MONGO_URI'] = "mongodb://localhost:27017/flaskmongo"
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
 
-
 mongo = PyMongo(app)
+
 
 @app.route('/users/<id>', methods=['GET'])
 @cross_origin()
@@ -34,26 +45,43 @@ def get_user(id):
 
 @app.route('/users', methods=['POST'])
 def create_user():
-
-    username = request.json['username']
-    password = request.json['password']
-    email = request.json['email']
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
 
     if username and email and password:
-
         hashed_password = generate_password_hash(password)
 
-        id = mongo.db.users.insert_one(
-            {"username":username, "email":email, "password":hashed_password}
-        )
+        default_filename = "default-profile.jpg"
 
+        if 'profile_pic' in request.files:
+
+            image = request.files['profile_pic']
+
+            # Si el usuario no carga una imagen de perfil no se ejecuta
+            if image.filename != '':
+                print(" ")
+                print(" ")
+                print(" ")
+                print(" HOLAAAAA ")
+                print(" ")
+                print(" ")
+                default_filename = secure_filename(image.filename)
+                default_filename = default_filename[:-4] + f'-{username}' + default_filename[-4:] #'blank-profile-Johnson.jpg'
+                image.save(os.path.join(UPLOAD_DIR, default_filename))
+
+
+        id = mongo.db.users.insert_one(
+            {"username":username, "email":email, "password":hashed_password, "profile": default_filename}
+        )
+    
     else:
         return not_found()
 
-    return {'message':'received'}
+    return {'message': 'received'}
 
 
-
+# /
 @app.route('/mostrarUsers/', methods=['GET'])
 @cross_origin()
 def get_users():
@@ -146,6 +174,7 @@ def updatePassword(id):
         return ("Error: ", e)
     
 
+# NO FUNCIONA POR LO DE LA FOTO
 @app.route('/users/<id>', methods=['DELETE'])
 @cross_origin()
 def delete_user(id):
