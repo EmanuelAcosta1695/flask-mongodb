@@ -21,15 +21,19 @@ from bson.objectid import ObjectId
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'img')
 
 
-
 app = Flask(__name__)
 
 CORS(app, support_credentials=True, resources={r"/*": {"origins": "*"}})
 
 #app.config['MONGO_URI'] = "mongodb://localhost:27017/flaskmongo"
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
+#app.config['MONGO_URI'] = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/flaskmongo')
 
 mongo = PyMongo(app)
+
+@app.route('/')
+def index():
+    return "Api Flask with MongoDB - User Managment"
 
 
 @app.route('/users/<id>', methods=['GET'])
@@ -49,6 +53,11 @@ def create_user():
     password = request.form['password']
     email = request.form['email']
 
+    # data = request.json
+    # username = data['username']
+    # password = data['password']
+    # email = data['email']
+
     if username and email and password:
         hashed_password = generate_password_hash(password)
 
@@ -60,12 +69,6 @@ def create_user():
 
             # Si el usuario no carga una imagen de perfil no se ejecuta
             if image.filename != '':
-                print(" ")
-                print(" ")
-                print(" ")
-                print(" HOLAAAAA ")
-                print(" ")
-                print(" ")
                 default_filename = secure_filename(image.filename)
                 default_filename = default_filename[:-4] + f'-{username}' + default_filename[-4:] #'blank-profile-Johnson.jpg'
                 image.save(os.path.join(UPLOAD_DIR, default_filename))
@@ -79,6 +82,8 @@ def create_user():
         return not_found()
 
     return {'message': 'received'}
+
+
 
 
 # /
@@ -187,4 +192,4 @@ def delete_user(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

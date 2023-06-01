@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./Backend:/app
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/flaskmongo
+
+  mongodb:
+    build:
+      context: ./mongoDb
+      dockerfile: Dockerfile
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+  # El servicio frontend se expone en el puerto 80, lo que te permitirá acceder a tu aplicación frontend desde localhost en tu máquina local.
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+
+volumes:
+  mongodb_data:
