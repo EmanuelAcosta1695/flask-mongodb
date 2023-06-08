@@ -5,13 +5,6 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 
 
-# from flask_swagger import swagger
-
-# from flask_swagger_ui import get_swaggerui_blueprint
-
-# from flasgger import Swagger
-
-
 import os
 import json
 
@@ -25,9 +18,8 @@ app = Flask(__name__)
 
 CORS(app, support_credentials=True, resources={r"/*": {"origins": "*"}})
 
-#app.config['MONGO_URI'] = "mongodb://localhost:27017/flaskmongo"
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
-#app.config['MONGO_URI'] = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/flaskmongo')
+
 
 mongo = PyMongo(app)
 
