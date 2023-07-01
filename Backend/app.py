@@ -14,7 +14,7 @@ from bson.objectid import ObjectId
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'img')
 
 # Carga las variables de entorno desde el archivo .env
-load_dotenv('.env')
+load_dotenv('.env' or 'MY_SECRET_VARIABLES')
 
 app = Flask(__name__)
 

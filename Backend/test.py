@@ -1,10 +1,8 @@
 import unittest
 from app import app
 from flask_pymongo import PyMongo
-import os
 
 class AppTest(unittest.TestCase):
-
 
     def setUp(self):
         app.testing = True
@@ -14,8 +12,6 @@ class AppTest(unittest.TestCase):
 
 
     def test_create_user(self):
-        my_secret_variable = os.getenv('MY_SECRET_VARIABLE')
-
         response = self.app.post('/users', data={
             'username': 'John',
             'password': 'password123',
@@ -27,15 +23,11 @@ class AppTest(unittest.TestCase):
 
 
     def test_get_user(self):
-        my_secret_variable = os.getenv('MY_SECRET_VARIABLE')
-
         response = self.app.get(f'/users/{self.user_id}')  # Usar el ID almacenado
         self.assertEqual(response.status_code, 200)
 
 
     def test_update_user(self):
-        my_secret_variable = os.getenv('MY_SECRET_VARIABLE')
-
         response = self.app.put(f'/users/{self.user_id}', json={
             'username': 'John Doe',
             'email': 'johndoe@example.com'
@@ -44,8 +36,6 @@ class AppTest(unittest.TestCase):
 
 
     def test_delete_user(self):
-        my_secret_variable = os.getenv('MY_SECRET_VARIABLE')
-
         response = self.app.delete(f'/users/{self.user_id}')
         self.assertEqual(response.status_code, 200)
 
