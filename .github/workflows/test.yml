@@ -52,5 +52,6 @@ jobs:
         run: |
           git config user.name Emanuel  # Configurar el nombre de usuario para las operaciones de git
           git config user.email e.acosta1695@gmail.com  # Configurar el correo electrónico para las operaciones de git
+          git checkout main
           git merge develop --no-ff --no-edit || exit 1  # Fusionar la rama "develop" en "main" sin fast-forward y sin editar el mensaje de commit, salir si hay conflictos
           git push origin main  # Subir los cambios fusionados a la rama "main" en el repositorio remoto
