@@ -23,6 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/requirements.txt
 
+      - name: Copy .env file for tests
+        run: |
+          cp .env.example Backend/.env
+
       - name: Run tests  # Paso para ejecutar los tests
         run: |
           python test.py
