@@ -9,6 +9,12 @@ jobs:
   test:
     runs-on: ubuntu-latest  # Se ejecuta en una máquina con Ubuntu
 
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+
     steps:
       - name: Checkout code  # Paso para clonar el código fuente del repositorio
         uses: actions/checkout@v2
