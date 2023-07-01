@@ -107,8 +107,6 @@ def get_users():
     return Response(updated_response, mimetype='application/json')
 
 
-  
-
 @app.errorhandler(404)
 def not_found(error=None):
 
