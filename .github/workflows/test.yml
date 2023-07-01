@@ -33,6 +33,14 @@ jobs:
           python test.py
           if [ $? -ne 0 ]; then exit 1; fi  # Verificar el estado de salida del comando y salir si hay errores
 
+  merge:
+    needs: test  # Este trabajo depende del trabajo "test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code  # Paso para clonar el código fuente del repositorio
+        uses: actions/checkout@v2
+
       - name: Merge to main  # Paso para fusionar la rama "develop" en "main"
         run: |
           git config user.name Emanuel  # Configurar el nombre de usuario para las operaciones de git
