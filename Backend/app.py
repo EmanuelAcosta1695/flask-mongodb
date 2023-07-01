@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
-
+from dotenv import load_dotenv
 
 import os
 import json
@@ -13,6 +13,8 @@ from bson.objectid import ObjectId
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'img')
 
+# Carga las variables de entorno desde el archivo .env
+load_dotenv('.env' or 'MY_SECRET_VARIABLES')
 
 app = Flask(__name__)
 
@@ -106,7 +108,6 @@ def get_users():
 
 
 
-
 @app.errorhandler(404)
 def not_found(error=None):
 
@@ -118,6 +119,7 @@ def not_found(error=None):
     response.status_code = 404
     
     return response
+
 
 
 @app.route('/users/<id>', methods=['PUT'])
