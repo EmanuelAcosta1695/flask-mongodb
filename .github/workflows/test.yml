@@ -25,6 +25,7 @@ jobs:
 
       - name: Run tests  # Paso para ejecutar los tests
         run: |
+          cd Backend
           python test.py
           if [ $? -ne 0 ]; then exit 1; fi  # Verificar el estado de salida del comando y salir si hay errores
 
