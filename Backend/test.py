@@ -1,7 +1,6 @@
 import unittest
 from app import app
 from flask_pymongo import PyMongo
-import os
 from dotenv import load_dotenv
 
 class AppTest(unittest.TestCase):
