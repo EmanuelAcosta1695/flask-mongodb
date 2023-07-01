@@ -23,9 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/requirements.txt
 
-      - name: Set up environment variables  # Paso para establecer las variables de entorno
+      - name: Set up environment variables
+        env:
+          MY_SECRET_VARIABLE: ${{ secrets.MY_SECRET_VARIABLES }}
         run: |
-          echo "MY_SECRET_VARIABLE=$MY_SECRET_VARIABLE" >> $GITHUB_ENV
+          echo "MY_SECRET_VARIABLE=$MY_SECRET_VARIABLES" >> $GITHUB_ENV
 
       - name: Run tests  # Paso para ejecutar los tests
         run: |
