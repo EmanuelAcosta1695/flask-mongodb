@@ -41,7 +41,7 @@ jobs:
       - name: Checkout code  # Paso para clonar el código fuente del repositorio
         uses: actions/checkout@v2
 
-      - name: Merge to main  # Paso para fusionar la rama "develop" en "main"
+      - name: Merge to main  # Paso para fusionar la rama "develop" en "main" 
         run: |
           git config user.name Emanuel  # Configurar el nombre de usuario para las operaciones de git
           git config user.email e.acosta1695@gmail.com  # Configurar el correo electrónico para las operaciones de git
