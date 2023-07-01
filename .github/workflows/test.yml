@@ -1,0 +1,44 @@
+name: Test and Merge  # Nombre del flujo de trabajo
+
+on:
+  push:
+    branches:
+      - develop  # Se ejecuta cuando se realiza un push en la rama "develop"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Se ejecuta en una máquina con Ubuntu
+
+    steps:
+      - name: Checkout code  # Paso para clonar el código fuente del repositorio
+        uses: actions/checkout@v2
+
+      - name: Set up Python  # Paso para configurar Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'  # Versión de Python a utilizar
+
+      - name: Install dependencies  # Paso para instalar las dependencias del proyecto
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests  # Paso para ejecutar los tests
+        run: |
+          python test.py
+          if [ $? -ne 0 ]; then exit 1; fi  # Verificar el estado de salida del comando y salir si hay errores
+
+  merge:
+    needs: test  # Este trabajo depende del trabajo "test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code  # Paso para clonar el código fuente del repositorio
+        uses: actions/checkout@v2
+
+      - name: Merge to main  # Paso para fusionar la rama "develop" en "main"
+        run: |
+          git config user.name Emanuel  # Configurar el nombre de usuario para las operaciones de git
+          git config user.email e.acosta1695@gmail.com  # Configurar el correo electrónico para las operaciones de git
+          git merge develop --no-ff --no-edit || exit 1  # Fusionar la rama "develop" en "main" sin fast-forward y sin editar el mensaje de commit, salir si hay conflictos
+          git push origin main  # Subir los cambios fusionados a la rama "main" en el repositorio remoto
