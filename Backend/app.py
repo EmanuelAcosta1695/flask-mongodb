@@ -78,8 +78,6 @@ def create_user():
     return {'message': 'received'}
 
 
-
-
 # /
 @app.route('/mostrarUsers/', methods=['GET'])
 @cross_origin()
