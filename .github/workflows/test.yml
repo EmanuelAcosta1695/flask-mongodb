@@ -23,12 +23,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/requirements.txt
 
-      - name: Copy .env file for tests
-        run: |
-          cp .env.example Backend/.env
-
+      - name: Set up environment variables
+        env:
+          MY_SECRET_VARIABLE: ${{ secrets.MY_SECRET_VARIABLES }}
+        
       - name: Run tests  # Paso para ejecutar los tests
         run: |
+          cd Backend
           python test.py
           if [ $? -ne 0 ]; then exit 1; fi  # Verificar el estado de salida del comando y salir si hay errores
 
