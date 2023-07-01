@@ -11,6 +11,7 @@ class AppTest(unittest.TestCase):
         app.testing = True
         self.app = app.test_client()
         self.mongo = PyMongo(app)
+        self.user_id = None  # Variable para almacenar el ID del usuario creado
 
 
     def test_create_user(self):
@@ -20,25 +21,26 @@ class AppTest(unittest.TestCase):
             'email': 'john@example.com'
         })
         self.assertEqual(response.status_code, 200)
-        # Asegúrate de verificar otros detalles de la respuesta según sea necesario
+        data = response.get_json()
+        self.user_id = data['id']  # Almacenar el ID del usuario creado
+
 
     def test_get_user(self):
-        response = self.app.get('/users/64662f7f4d41c72368595967')
+        response = self.app.get(f'/users/{self.user_id}')  # Usar el ID almacenado
         self.assertEqual(response.status_code, 200)
-        # Asegúrate de verificar otros detalles de la respuesta según sea necesario
+
 
     def test_update_user(self):
-        response = self.app.put('/users/64662f7f4d41c72368595967', json={
+        response = self.app.put(f'/users/{self.user_id}', json={
             'username': 'John Doe',
             'email': 'johndoe@example.com'
         })
         self.assertEqual(response.status_code, 200)
-        # Asegúrate de verificar otros detalles de la respuesta según sea necesario
+
 
     def test_delete_user(self):
-        response = self.app.delete('/users/64662f7f4d41c72368595967')
+        response = self.app.delete(f'/users/{self.user_id}')
         self.assertEqual(response.status_code, 200)
-        # Asegúrate de verificar otros detalles de la respuesta según sea necesario
 
 
 if __name__ == '__main__':
