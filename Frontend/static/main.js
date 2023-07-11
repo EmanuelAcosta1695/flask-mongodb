@@ -26,6 +26,7 @@ function users() {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+           
             // Actualizar el HTML con los datos recibidos
             let html = '';
 
