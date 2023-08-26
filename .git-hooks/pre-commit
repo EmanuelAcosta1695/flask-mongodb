@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Ejecutar eslint en los archivos modificados
+echo "Ejecutando ESLint..."
+eslint $(git diff --cached --name-only | grep '\.js$')
+if [ $? -ne 0 ]; then
+    echo "ESLint encontró problemas en los archivos. Corrige los problemas antes de confirmar."
+    exit 1
+fi
+
+echo "ESLint pasó sin problemas. Puedes confirmar tus cambios."
+exit 0
